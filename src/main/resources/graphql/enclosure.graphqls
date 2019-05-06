@@ -1,0 +1,8 @@
+type Enclosure {
+  enclosureNumber: ID!
+  animals: [Animal]!
+}
+
+extend type Query {
+  allEnclosures: [Enclosure]!
+}
