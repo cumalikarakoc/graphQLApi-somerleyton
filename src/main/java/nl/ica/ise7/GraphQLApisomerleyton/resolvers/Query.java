@@ -23,7 +23,7 @@ public class Query implements GraphQLQueryResolver {
     public Animal animalById(Long id){
         Animal animal = animalRepository.findOne(id);
         if(animal == null){
-            throw new AnimalNotFoundException("The animal to be updated was not found", id);
+            throw new AnimalNotFoundException("The animal was not found", id);
         }
         return animalRepository.findOne(id);
     }

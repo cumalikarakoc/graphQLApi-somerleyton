@@ -34,7 +34,7 @@ public class Mutation implements GraphQLMutationResolver {
     public boolean deleteAnimal(Long id) {
         Animal animal = animalRepository.findOne(id);
         if(animal == null) {
-            throw new AnimalNotFoundException("The animal to be updated was not found", id);
+            throw new AnimalNotFoundException("The animal to be deleted was not found", id);
         }
         animalRepository.delete(animal);
         return true;
