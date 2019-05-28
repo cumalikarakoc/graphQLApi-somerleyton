@@ -1,4 +1,4 @@
-package nl.ica.ise7.GraphQLApisomerleyton.exceptions;
+package nl.ica.ise7.GraphQLApisomerleyton.adapters;
 
 import graphql.ErrorType;
 import graphql.ExceptionWhileDataFetching;

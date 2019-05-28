@@ -3,7 +3,7 @@ package nl.ica.ise7.GraphQLApisomerleyton;
 import graphql.ExceptionWhileDataFetching;
 import graphql.GraphQLError;
 import graphql.servlet.GraphQLErrorHandler;
-import nl.ica.ise7.GraphQLApisomerleyton.exceptions.GraphQLErrorAdapter;
+import nl.ica.ise7.GraphQLApisomerleyton.adapters.GraphQLErrorAdapter;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.EnclosureRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.AnimalRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.resolvers.AnimalResolver;
