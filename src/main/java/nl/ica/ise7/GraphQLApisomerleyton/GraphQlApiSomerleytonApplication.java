@@ -4,7 +4,6 @@ import graphql.ExceptionWhileDataFetching;
 import graphql.GraphQLError;
 import graphql.servlet.GraphQLErrorHandler;
 import nl.ica.ise7.GraphQLApisomerleyton.adapters.GraphQLErrorAdapter;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.resolvers.Mutation;
 import nl.ica.ise7.GraphQLApisomerleyton.resolvers.Query;
 import org.springframework.boot.SpringApplication;
@@ -48,13 +47,13 @@ public class GraphQlApiSomerleytonApplication {
     }
 
     @Bean
-    public Query query(SpeciesRepository speciesRepository) {
-        return new Query(speciesRepository);
+    public Query query() {
+        return new Query();
     }
 
     @Bean
-    public Mutation mutation(SpeciesRepository speciesRepository) {
-        return new Mutation(speciesRepository);
+    public Mutation mutation() {
+        return new Mutation();
     }
 
 }

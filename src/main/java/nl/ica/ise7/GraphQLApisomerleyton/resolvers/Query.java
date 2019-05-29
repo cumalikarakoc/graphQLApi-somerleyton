@@ -4,14 +4,12 @@ import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import javassist.NotFoundException;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Species;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Query implements GraphQLQueryResolver {
 
+    @Autowired
     private SpeciesRepository speciesRepository;
-
-    public Query(SpeciesRepository speciesRepository) {
-        this.speciesRepository = speciesRepository;
-    }
 
     public Iterable<Species> allSpecies() {
         return speciesRepository.findAll();

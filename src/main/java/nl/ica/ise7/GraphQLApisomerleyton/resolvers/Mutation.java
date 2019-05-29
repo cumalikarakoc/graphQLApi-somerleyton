@@ -4,13 +4,11 @@ import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import javassist.NotFoundException;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Species;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Mutation implements GraphQLMutationResolver {
+    @Autowired
     private SpeciesRepository speciesRepository;
-
-    public Mutation(SpeciesRepository speciesRepository) {
-        this.speciesRepository = speciesRepository;
-    }
 
     public Species newSpecies(String speciesName, String description, String family, String species, String subspecies) {
         Species speciesInstance = new Species();
