@@ -1,0 +1,18 @@
+type Species{
+    speciesName: ID!
+    description: String!
+    family: String
+    species: String
+    subspecies: String
+}
+
+type Query{
+    allSpecies: [Species]!
+    speciesByName(speciesName: String!): Species!
+}
+
+type Mutation{
+    newSpecies(speciesName: String!, description: String!, family: String, species: String, subspecies: String): Species!
+    removeSpecies(speciesName: String!): Boolean!
+}
+

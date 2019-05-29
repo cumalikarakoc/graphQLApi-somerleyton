@@ -1,42 +1,36 @@
 package nl.ica.ise7.GraphQLApisomerleyton.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-import nl.ica.ise7.GraphQLApisomerleyton.exceptions.AnimalNotFoundException;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Animal;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Enclosure;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.EnclosureRepository;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.AnimalRepository;
+import javassist.NotFoundException;
+import nl.ica.ise7.GraphQLApisomerleyton.models.Species;
+import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
 
 public class Mutation implements GraphQLMutationResolver {
-    private AnimalRepository animalRepository;
-    private EnclosureRepository enclosureRepository;
+    private SpeciesRepository speciesRepository;
 
-    public Mutation(EnclosureRepository enclosureRepository, AnimalRepository animalRepository) {
-        this.enclosureRepository = enclosureRepository;
-        this.animalRepository = animalRepository;
+    public Mutation(SpeciesRepository speciesRepository) {
+        this.speciesRepository = speciesRepository;
     }
 
-    public Animal newAnimal(String animal_name ) {
-        Animal animal = new Animal();
-        animal.setName(animal_name);
+    public Species newSpecies(String speciesName, String description, String family, String species, String subspecies) {
+        Species speciesInstance = new Species();
+        speciesInstance.setSpeciesName(speciesName);
+        speciesInstance.setDescription(description);
+        speciesInstance.setFamily(family);
+        speciesInstance.setSpecies(species);
+        speciesInstance.setSubspecies(subspecies);
 
-        animalRepository.save(animal);
+        speciesRepository.save((speciesInstance));
 
-        return animal;
+        return speciesInstance;
     }
 
-    public Enclosure newEnclosure(){
-        Enclosure enclosure = new Enclosure();
-        enclosureRepository.save(enclosure);
-        return enclosure;
-    }
-
-    public boolean deleteAnimal(Long id) {
-        Animal animal = animalRepository.findOne(id);
-        if(animal == null) {
-            throw new AnimalNotFoundException("The animal to be deleted was not found", id);
+    public Boolean removeSpecies(String speciesName) throws NotFoundException {
+        Species species = speciesRepository.findBySpeciesName(speciesName);
+        if(species == null){
+            throw new NotFoundException("The species to be deleted is not found");
         }
-        animalRepository.delete(animal);
+        speciesRepository.delete(species);
         return true;
     }
 }

@@ -4,10 +4,7 @@ import graphql.ExceptionWhileDataFetching;
 import graphql.GraphQLError;
 import graphql.servlet.GraphQLErrorHandler;
 import nl.ica.ise7.GraphQLApisomerleyton.adapters.GraphQLErrorAdapter;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.EnclosureRepository;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.AnimalRepository;
-import nl.ica.ise7.GraphQLApisomerleyton.resolvers.AnimalResolver;
-import nl.ica.ise7.GraphQLApisomerleyton.resolvers.EnclosureResolver;
+import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.resolvers.Mutation;
 import nl.ica.ise7.GraphQLApisomerleyton.resolvers.Query;
 import org.springframework.boot.SpringApplication;
@@ -51,23 +48,13 @@ public class GraphQlApiSomerleytonApplication {
     }
 
     @Bean
-    public AnimalResolver animalResolver(EnclosureRepository enclosureRepository) {
-        return new AnimalResolver(enclosureRepository);
+    public Query query(SpeciesRepository speciesRepository) {
+        return new Query(speciesRepository);
     }
 
     @Bean
-    public EnclosureResolver enclosureResolver(AnimalRepository animalRepository) {
-        return new EnclosureResolver(animalRepository);
-    }
-
-    @Bean
-    public Query query(EnclosureRepository enclosureRepository, AnimalRepository animalRepository) {
-        return new Query(enclosureRepository, animalRepository);
-    }
-
-    @Bean
-    public Mutation mutation(EnclosureRepository enclosureRepository, AnimalRepository animalRepository) {
-        return new Mutation(enclosureRepository, animalRepository);
+    public Mutation mutation(SpeciesRepository speciesRepository) {
+        return new Mutation(speciesRepository);
     }
 
 }

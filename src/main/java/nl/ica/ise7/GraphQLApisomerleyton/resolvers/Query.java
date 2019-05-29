@@ -1,36 +1,28 @@
 package nl.ica.ise7.GraphQLApisomerleyton.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import nl.ica.ise7.GraphQLApisomerleyton.exceptions.AnimalNotFoundException;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Animal;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Enclosure;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.EnclosureRepository;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.AnimalRepository;
+import javassist.NotFoundException;
+import nl.ica.ise7.GraphQLApisomerleyton.models.Species;
+import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
 
 public class Query implements GraphQLQueryResolver {
-    private AnimalRepository animalRepository;
-    private EnclosureRepository enclosureRepository;
 
-    public Query(EnclosureRepository enclosureRepository, AnimalRepository animalRepository) {
-        this.enclosureRepository = enclosureRepository;
-        this.animalRepository = animalRepository;
+    private SpeciesRepository speciesRepository;
+
+    public Query(SpeciesRepository speciesRepository) {
+        this.speciesRepository = speciesRepository;
     }
 
-    public Iterable<Animal> allAnimals() {
-        return animalRepository.findAll();
+    public Iterable<Species> allSpecies() {
+        return speciesRepository.findAll();
     }
 
-    public Animal animalById(Long id){
-        Animal animal = animalRepository.findOne(id);
-        if(animal == null){
-            throw new AnimalNotFoundException("The animal was not found", id);
+    public Species speciesByName(String speciesName) throws NotFoundException {
+        Species species = speciesRepository.findBySpeciesName(speciesName);
+        if(species == null){
+            throw new NotFoundException("The species " + speciesName + " is not found" );
         }
-        return animalRepository.findOne(id);
+        return species;
     }
-
-    public Iterable<Enclosure> allEnclosures() {
-        return enclosureRepository.findAll();
-    }
-
 
 }
