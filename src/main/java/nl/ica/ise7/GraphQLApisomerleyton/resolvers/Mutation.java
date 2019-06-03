@@ -10,25 +10,47 @@ public class Mutation implements GraphQLMutationResolver {
     @Autowired
     private SpeciesRepository speciesRepository;
 
-    public Species newSpecies(String speciesName, String description, String family, String species, String subspecies) {
-        Species speciesInstance = new Species();
-        speciesInstance.setSpeciesName(speciesName);
-        speciesInstance.setDescription(description);
-        speciesInstance.setFamily(family);
-        speciesInstance.setSpecies(species);
-        speciesInstance.setSubspecies(subspecies);
+    public Species newSpecies(Species input) throws Exception {
+        if (speciesRepository.exists(input.getSpeciesName())) {
+            throw new Exception("The species to be added already exists.");
+        }
+        Species species = new Species();
 
-        speciesRepository.save((speciesInstance));
-
-        return speciesInstance;
+        return speciesRepository.save((mapInputToSpeciesModel(species, input)));
     }
 
     public Boolean removeSpecies(String speciesName) throws NotFoundException {
         Species species = speciesRepository.findBySpeciesName(speciesName);
-        if(species == null){
+        if (species == null) {
             throw new NotFoundException("The species to be deleted is not found");
         }
         speciesRepository.delete(species);
         return true;
+    }
+
+    public Species updateSpecies(String speciesName, Species input) throws NotFoundException {
+        Species species = speciesRepository.findBySpeciesName(speciesName);
+        if (species == null) {
+            throw new NotFoundException("The species to be updated is not found");
+        }
+
+        Species mappedSpecies = mapInputToSpeciesModel(species, input);
+
+        // save function saves an entity if the id doesnt exist in the database.
+        // if the id has the same value as the input id then it will perform an update
+        if (speciesName.equals(input.getSpeciesName())) {
+            return speciesRepository.save(mappedSpecies);
+        }
+        speciesRepository.updateSpeciesName(speciesName, input.getSpeciesName());
+        return speciesRepository.save(mappedSpecies);
+    }
+
+    private Species mapInputToSpeciesModel(Species species, Species input) {
+        species.setSpeciesName(input.getSpeciesName());
+        species.setDescription(input.getDescription());
+        species.setFamily(input.getFamily());
+        species.setSpecies(input.getSpecies());
+        species.setSubspecies(input.getSubspecies());
+        return species;
     }
 }
