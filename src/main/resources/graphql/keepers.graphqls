@@ -1,0 +1,18 @@
+type Keeper{
+    name: ID!
+}
+
+input KeeperInput{
+    name: ID!
+}
+
+extend type Query{
+    allKeepers: [Keeper]!
+    keeperByName(name: ID!): Keeper!
+}
+
+extend type Mutation{
+     newKeeper(name: ID!): Keeper!
+     removeKeeper(name: ID!): Boolean!
+     updateKeeper(name: ID!, input: KeeperInput!): Keeper!
+}
