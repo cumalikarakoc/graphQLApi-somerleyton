@@ -2,14 +2,8 @@ package nl.ica.ise7.GraphQLApisomerleyton.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import javassist.NotFoundException;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Area;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Enclosure;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Keeper;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Species;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.AreaRepository;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.EnclosureRepository;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.KeeperRepository;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
+import nl.ica.ise7.GraphQLApisomerleyton.models.*;
+import nl.ica.ise7.GraphQLApisomerleyton.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class Query implements GraphQLQueryResolver {
@@ -25,6 +19,9 @@ public class Query implements GraphQLQueryResolver {
 
     @Autowired
     private EnclosureRepository enclosureRepository;
+
+    @Autowired
+    private AnimalRepository animalRepository;
 
     public Iterable<Species> allSpecies() {
         return speciesRepository.findAll();
@@ -81,5 +78,17 @@ public class Query implements GraphQLQueryResolver {
 
     public Iterable<Enclosure> allEnclosuresByArea(String areaName){
        return enclosureRepository.findAllByEnclosureIdentity_AreaName(areaName);
+    }
+
+    public Iterable<Animal> allAnimals(){
+        return animalRepository.findAll();
+    }
+
+    public Animal animalById(String id) throws NotFoundException {
+        Animal animal = animalRepository.findOne(id);
+        if(animal == null){
+            throw new NotFoundException("The animal " + id + " is not found.");
+        }
+        return animal;
     }
 }

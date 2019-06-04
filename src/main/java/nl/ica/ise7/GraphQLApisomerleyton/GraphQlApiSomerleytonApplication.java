@@ -4,10 +4,7 @@ import graphql.ExceptionWhileDataFetching;
 import graphql.GraphQLError;
 import graphql.servlet.GraphQLErrorHandler;
 import nl.ica.ise7.GraphQLApisomerleyton.adapters.GraphQLErrorAdapter;
-import nl.ica.ise7.GraphQLApisomerleyton.resolvers.AreaResolver;
-import nl.ica.ise7.GraphQLApisomerleyton.resolvers.EnclosureResolver;
-import nl.ica.ise7.GraphQLApisomerleyton.resolvers.Mutation;
-import nl.ica.ise7.GraphQLApisomerleyton.resolvers.Query;
+import nl.ica.ise7.GraphQLApisomerleyton.resolvers.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -66,5 +63,10 @@ public class GraphQlApiSomerleytonApplication {
     @Bean
     public AreaResolver areaResolver(){
         return new AreaResolver();
+    }
+
+    @Bean
+    public AnimalResolver animalResolver(){
+        return new AnimalResolver();
     }
 }
