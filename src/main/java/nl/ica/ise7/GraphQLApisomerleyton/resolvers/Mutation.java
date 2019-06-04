@@ -2,8 +2,10 @@ package nl.ica.ise7.GraphQLApisomerleyton.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import javassist.NotFoundException;
+import nl.ica.ise7.GraphQLApisomerleyton.models.Area;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Keeper;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Species;
+import nl.ica.ise7.GraphQLApisomerleyton.repositories.AreaRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.KeeperRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ public class Mutation implements GraphQLMutationResolver {
 
     @Autowired
     private KeeperRepository keeperRepository;
+
+    @Autowired
+    private AreaRepository areaRepository;
 
     public Species newSpecies(Species input) throws Exception {
         if (speciesRepository.exists(input.getSpeciesName())) {
@@ -68,12 +73,16 @@ public class Mutation implements GraphQLMutationResolver {
         return keeperRepository.save(keeper);
     }
 
-    public Boolean removeKeeper(String name) throws NotFoundException {
+    public Boolean removeKeeper(String name) throws Exception {
         Keeper keeper = keeperRepository.findOne(name);
         if (keeper == null) {
             throw new NotFoundException("The keeper to be removed is not found.");
         }
-        keeperRepository.delete(keeper);
+        try {
+            keeperRepository.delete(keeper);
+        } catch (Exception e) {
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
         return true;
     }
 
@@ -86,5 +95,45 @@ public class Mutation implements GraphQLMutationResolver {
         keeperRepository.updateKeeper(keeper.getName(), input.getName());
         keeper.setName(input.getName());
         return keeper;
+    }
+
+    public Area newArea(String name, String headkeeper) throws Exception {
+        if (areaRepository.exists(name)) {
+            throw new Exception("The area to be added already exists.");
+        }
+
+        Keeper keeper = keeperRepository.findOne(headkeeper);
+        if (keeper == null) {
+            throw new NotFoundException("The keeper " + headkeeper + " doesn't exist.");
+        }
+
+        Area area = new Area();
+        area.setName(name);
+        area.setHeadKeeper(keeper);
+        return areaRepository.save(area);
+    }
+
+    public Boolean removeArea(String name) throws Exception {
+        Area area = areaRepository.findOne(name);
+        if (area == null) {
+            throw new NotFoundException("The area to be removed is not found.");
+        }
+        try {
+            areaRepository.delete(area.getName());
+        } catch (Exception e) {
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
+        return true;
+    }
+
+    public Area updateArea(String name, Area input) throws NotFoundException {
+        Area area = areaRepository.findOne(name);
+        if (area == null) {
+            throw new NotFoundException("The area to be updated is not found.");
+        }
+
+        areaRepository.updateArea(area.getName(), input.getName(), input.getHeadKeeper().getName());
+
+        return areaRepository.findOne(input.getName());
     }
 }
