@@ -1,0 +1,9 @@
+type Enclosure{
+    area: Area!
+    enclosureNumber: Int!
+}
+
+extend type Query{
+    allEnclosures: [Enclosure]!
+    allEnclosuresByArea(areaName: String!): [Enclosure]!
+}
