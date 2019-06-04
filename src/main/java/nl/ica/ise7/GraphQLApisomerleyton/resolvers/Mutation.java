@@ -5,9 +5,11 @@ import javassist.NotFoundException;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Area;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Keeper;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Species;
+import nl.ica.ise7.GraphQLApisomerleyton.models.Supplier;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.AreaRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.KeeperRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
+import nl.ica.ise7.GraphQLApisomerleyton.repositories.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class Mutation implements GraphQLMutationResolver {
@@ -19,6 +21,9 @@ public class Mutation implements GraphQLMutationResolver {
 
     @Autowired
     private AreaRepository areaRepository;
+
+    @Autowired
+    SupplierRepository supplierRepository;
 
     public Species newSpecies(Species input) throws Exception {
         if (speciesRepository.exists(input.getSpeciesName())) {
@@ -135,5 +140,37 @@ public class Mutation implements GraphQLMutationResolver {
         areaRepository.updateArea(area.getName(), input.getName(), input.getHeadKeeper().getName());
 
         return areaRepository.findOne(input.getName());
+    }
+
+    public Supplier newSupplier(Supplier input) throws Exception {
+        if (supplierRepository.exists(input.getName())) {
+            throw new Exception("Supplier to be added already exists.");
+        }
+        Supplier supplier = new Supplier();
+        supplier.setName(input.getName());
+        supplier.setPhone(input.getPhone());
+        supplier.setAddress(input.getAddress());
+        return supplierRepository.save(supplier);
+    }
+
+    public Supplier updateSupplier(String name, Supplier input) throws NotFoundException {
+        Supplier supplier = supplierRepository.findOne(name);
+        if (supplier == null) {
+            throw new NotFoundException("The supplier to be updated is not found.");
+        }
+        supplierRepository.updateSupplier(supplier.getName(),input.getName() , input.getPhone(), input.getAddress());
+        return supplierRepository.findOne(input.getName());
+    }
+
+    public Boolean removeSupplier(String name) throws Exception {
+        if (!supplierRepository.exists(name)) {
+            throw new NotFoundException("The supplier to be deleted is not found.");
+        }
+        try {
+            supplierRepository.delete(name);
+        } catch (Exception e) {
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
+        return true;
     }
 }

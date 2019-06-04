@@ -5,9 +5,11 @@ import javassist.NotFoundException;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Area;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Keeper;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Species;
+import nl.ica.ise7.GraphQLApisomerleyton.models.Supplier;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.AreaRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.KeeperRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
+import nl.ica.ise7.GraphQLApisomerleyton.repositories.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class Query implements GraphQLQueryResolver {
@@ -20,6 +22,9 @@ public class Query implements GraphQLQueryResolver {
 
     @Autowired
     private AreaRepository areaRepository;
+
+    @Autowired
+    private SupplierRepository supplierRepository;
 
     public Iterable<Species> allSpecies() {
         return speciesRepository.findAll();
@@ -68,5 +73,17 @@ public class Query implements GraphQLQueryResolver {
             throw new NotFoundException("The keeper " + keeper.getName() + " is not an head keeper.");
         }
         return area;
+    }
+
+    public Iterable<Supplier> allSuppliers(){
+        return supplierRepository.findAll();
+    }
+
+    public Supplier supplierByName(String supplierName) throws NotFoundException {
+        Supplier supplier = supplierRepository.findOne(supplierName);
+        if(supplier == null){
+            throw new NotFoundException("The supplier "+ supplierName + " is not found.");
+        }
+        return supplier;
     }
 }
