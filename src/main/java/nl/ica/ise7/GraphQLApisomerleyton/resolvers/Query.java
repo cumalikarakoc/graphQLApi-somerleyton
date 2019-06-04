@@ -18,6 +18,9 @@ public class Query implements GraphQLQueryResolver {
     private AreaRepository areaRepository;
 
     @Autowired
+    private SupplierRepository supplierRepository;
+
+    @Autowired
     private EnclosureRepository enclosureRepository;
 
     @Autowired
@@ -72,21 +75,33 @@ public class Query implements GraphQLQueryResolver {
         return area;
     }
 
-    public Iterable<Enclosure> allEnclosures(){
+    public Iterable<Supplier> allSuppliers() {
+        return supplierRepository.findAll();
+    }
+
+    public Supplier supplierByName(String supplierName) throws NotFoundException {
+        Supplier supplier = supplierRepository.findOne(supplierName);
+        if (supplier == null) {
+            throw new NotFoundException("The supplier " + supplierName + " is not found.");
+        }
+        return supplier;
+    }
+
+    public Iterable<Enclosure> allEnclosures() {
         return enclosureRepository.findAll();
     }
 
-    public Iterable<Enclosure> allEnclosuresByArea(String areaName){
-       return enclosureRepository.findAllByEnclosureIdentity_AreaName(areaName);
+    public Iterable<Enclosure> allEnclosuresByArea(String areaName) {
+        return enclosureRepository.findAllByEnclosureIdentity_AreaName(areaName);
     }
 
-    public Iterable<Animal> allAnimals(){
+    public Iterable<Animal> allAnimals() {
         return animalRepository.findAll();
     }
 
     public Animal animalById(String id) throws NotFoundException {
         Animal animal = animalRepository.findOne(id);
-        if(animal == null){
+        if (animal == null) {
             throw new NotFoundException("The animal " + id + " is not found.");
         }
         return animal;

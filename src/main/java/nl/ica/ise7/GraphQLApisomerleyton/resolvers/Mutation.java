@@ -5,10 +5,7 @@ import javassist.NotFoundException;
 import nl.ica.ise7.GraphQLApisomerleyton.models.*;
 import nl.ica.ise7.GraphQLApisomerleyton.models.compositeKeys.EnclosureIdentity;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.text.ParseException;
 
 public class Mutation implements GraphQLMutationResolver {
     @Autowired
@@ -19,6 +16,9 @@ public class Mutation implements GraphQLMutationResolver {
 
     @Autowired
     private AreaRepository areaRepository;
+
+    @Autowired
+    private SupplierRepository supplierRepository;
 
     @Autowired
     private EnclosureRepository enclosureRepository;
@@ -143,12 +143,44 @@ public class Mutation implements GraphQLMutationResolver {
         return areaRepository.findOne(input.getName());
     }
 
-    public Enclosure newEnclosure(String areaName){
+    public Supplier newSupplier(Supplier input) throws Exception {
+        if (supplierRepository.exists(input.getName())) {
+            throw new Exception("Supplier to be added already exists.");
+        }
+        Supplier supplier = new Supplier();
+        supplier.setName(input.getName());
+        supplier.setPhone(input.getPhone());
+        supplier.setAddress(input.getAddress());
+        return supplierRepository.save(supplier);
+    }
+
+    public Supplier updateSupplier(String name, Supplier input) throws NotFoundException {
+        Supplier supplier = supplierRepository.findOne(name);
+        if (supplier == null) {
+            throw new NotFoundException("The supplier to be updated is not found.");
+        }
+        supplierRepository.updateSupplier(supplier.getName(), input.getName(), input.getPhone(), input.getAddress());
+        return supplierRepository.findOne(input.getName());
+    }
+
+    public Boolean removeSupplier(String name) throws Exception {
+        if (!supplierRepository.exists(name)) {
+            throw new NotFoundException("The supplier to be deleted is not found.");
+        }
+        try {
+            supplierRepository.delete(name);
+        } catch (Exception e) {
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
+        return true;
+    }
+
+    public Enclosure newEnclosure(String areaName) {
         EnclosureIdentity enclosureIdentity = new EnclosureIdentity();
         enclosureIdentity.setAreaName(areaName);
         enclosureIdentity.setEnclosureNumber(enclosureRepository.getNextEnclosureNumber(areaName));
 
-        Enclosure enclosure =  new Enclosure();
+        Enclosure enclosure = new Enclosure();
         enclosure.setEnclosureIdentity(enclosureIdentity);
 
         return enclosureRepository.save(enclosure);
@@ -180,13 +212,13 @@ public class Mutation implements GraphQLMutationResolver {
     }
 
     public boolean removeAnimal(String id) throws Exception {
-        if(animalRepository.findOne(id) == null){
+        if (animalRepository.findOne(id) == null) {
             throw new NotFoundException("The animal to be removed is not found.");
         }
 
-        try{
+        try {
             animalRepository.delete(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception(e.getCause().getCause().getLocalizedMessage());
         }
 
@@ -195,13 +227,13 @@ public class Mutation implements GraphQLMutationResolver {
 
     public Animal updateAnimal(String id, Animal input) throws NotFoundException {
         Animal animal = animalRepository.findOne(id);
-        if(animal == null){
+        if (animal == null) {
             throw new NotFoundException("The animal to be updated is not found.");
         }
 
         Animal mappedAnimal = mapInputToAnimalModel(animal, input);
 
-        if(id.equals(input.getId())){
+        if (id.equals(input.getId())) {
             return animalRepository.save(mappedAnimal);
         }
 
