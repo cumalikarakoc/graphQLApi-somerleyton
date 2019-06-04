@@ -2,15 +2,17 @@ package nl.ica.ise7.GraphQLApisomerleyton.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLResolver;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Area;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Keeper;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.KeeperRepository;
+import nl.ica.ise7.GraphQLApisomerleyton.models.Enclosure;
+import nl.ica.ise7.GraphQLApisomerleyton.repositories.EnclosureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class AreaResolver implements GraphQLResolver {
-    @Autowired
-    private KeeperRepository keeperRepository;
+import java.util.List;
 
-    public Keeper getHeadKeeper(Area area){
-        return keeperRepository.findOne(area.getHeadKeeper().getName());
+public class AreaResolver implements GraphQLResolver<Area> {
+    @Autowired
+    private EnclosureRepository enclosureRepository;
+
+    public List<Enclosure> getEnclosures(Area area){
+        return enclosureRepository.findAllByEnclosureIdentity_AreaName(area.getName());
     }
 }

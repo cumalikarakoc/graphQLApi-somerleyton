@@ -2,14 +2,9 @@ package nl.ica.ise7.GraphQLApisomerleyton.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import javassist.NotFoundException;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Area;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Keeper;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Species;
-import nl.ica.ise7.GraphQLApisomerleyton.models.Supplier;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.AreaRepository;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.KeeperRepository;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
-import nl.ica.ise7.GraphQLApisomerleyton.repositories.SupplierRepository;
+import nl.ica.ise7.GraphQLApisomerleyton.models.*;
+import nl.ica.ise7.GraphQLApisomerleyton.models.compositeKeys.EnclosureIdentity;
+import nl.ica.ise7.GraphQLApisomerleyton.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class Mutation implements GraphQLMutationResolver {
@@ -23,7 +18,13 @@ public class Mutation implements GraphQLMutationResolver {
     private AreaRepository areaRepository;
 
     @Autowired
-    SupplierRepository supplierRepository;
+    private SupplierRepository supplierRepository;
+
+    @Autowired
+    private EnclosureRepository enclosureRepository;
+
+    @Autowired
+    private AnimalRepository animalRepository;
 
     public Species newSpecies(Species input) throws Exception {
         if (speciesRepository.exists(input.getSpeciesName())) {
@@ -158,7 +159,7 @@ public class Mutation implements GraphQLMutationResolver {
         if (supplier == null) {
             throw new NotFoundException("The supplier to be updated is not found.");
         }
-        supplierRepository.updateSupplier(supplier.getName(),input.getName() , input.getPhone(), input.getAddress());
+        supplierRepository.updateSupplier(supplier.getName(), input.getName(), input.getPhone(), input.getAddress());
         return supplierRepository.findOne(input.getName());
     }
 
@@ -172,5 +173,81 @@ public class Mutation implements GraphQLMutationResolver {
             throw new Exception(e.getCause().getCause().getLocalizedMessage());
         }
         return true;
+    }
+
+    public Enclosure newEnclosure(String areaName) {
+        EnclosureIdentity enclosureIdentity = new EnclosureIdentity();
+        enclosureIdentity.setAreaName(areaName);
+        enclosureIdentity.setEnclosureNumber(enclosureRepository.getNextEnclosureNumber(areaName));
+
+        Enclosure enclosure = new Enclosure();
+        enclosure.setEnclosureIdentity(enclosureIdentity);
+
+        return enclosureRepository.save(enclosure);
+    }
+
+    public boolean removeEnclosure(String areaName, int enclosureNumber) throws Exception {
+        EnclosureIdentity enclosureIdentity = new EnclosureIdentity();
+        enclosureIdentity.setAreaName(areaName);
+        enclosureIdentity.setEnclosureNumber(enclosureNumber);
+
+        Enclosure enclosure = enclosureRepository.findOne(enclosureIdentity);
+        if (enclosure == null) {
+            throw new NotFoundException("The enclosure to be removed is not found.");
+        }
+        try {
+            enclosureRepository.delete(enclosure);
+        } catch (Exception e) {
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
+        return true;
+    }
+
+    public Animal newAnimal(Animal input) throws Exception {
+        if (animalRepository.exists(input.getId())) {
+            throw new Exception("The animal to be added already exists.");
+        }
+        Animal animal = new Animal();
+        return animalRepository.save(mapInputToAnimalModel(animal, input));
+    }
+
+    public boolean removeAnimal(String id) throws Exception {
+        if (animalRepository.findOne(id) == null) {
+            throw new NotFoundException("The animal to be removed is not found.");
+        }
+
+        try {
+            animalRepository.delete(id);
+        } catch (Exception e) {
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
+
+        return true;
+    }
+
+    public Animal updateAnimal(String id, Animal input) throws NotFoundException {
+        Animal animal = animalRepository.findOne(id);
+        if (animal == null) {
+            throw new NotFoundException("The animal to be updated is not found.");
+        }
+
+        Animal mappedAnimal = mapInputToAnimalModel(animal, input);
+
+        if (id.equals(input.getId())) {
+            return animalRepository.save(mappedAnimal);
+        }
+
+        animalRepository.updateAnimalId(id, input.getId());
+        return animalRepository.save(mappedAnimal);
+    }
+
+    private Animal mapInputToAnimalModel(Animal animal, Animal input) {
+        animal.setId(input.getId());
+        animal.setName(input.getName());
+        animal.setBirthPlace(input.getBirthPlace());
+        animal.setBirthDate(input.getBirthDate());
+        animal.setGender(input.getGender());
+        animal.setSpeciesName(input.getSpeciesName());
+        return animal;
     }
 }
