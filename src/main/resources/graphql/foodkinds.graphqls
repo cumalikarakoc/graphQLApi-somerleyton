@@ -1,0 +1,18 @@
+type FoodKind{
+    name : ID!
+}
+
+input FoodKindInput{
+    name : ID!
+}
+
+extend type Query{
+    allFoodKinds : [FoodKind]!
+    foodKindById(name : ID!): FoodKind!
+}
+
+extend type Mutation {
+    newFoodKind(foodKind : FoodKindInput!): FoodKind!
+    updateFoodKind(name : ID!, input : ID!) : FoodKind!
+    removeFoodKind(name : ID!):Boolean!
+}
