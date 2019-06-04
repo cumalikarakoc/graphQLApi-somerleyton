@@ -3,9 +3,12 @@ package nl.ica.ise7.GraphQLApisomerleyton.resolvers;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import javassist.NotFoundException;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Area;
+import nl.ica.ise7.GraphQLApisomerleyton.models.Enclosure;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Keeper;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Species;
+import nl.ica.ise7.GraphQLApisomerleyton.models.compositeKeys.EnclosureIdentity;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.AreaRepository;
+import nl.ica.ise7.GraphQLApisomerleyton.repositories.EnclosureRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.KeeperRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ public class Mutation implements GraphQLMutationResolver {
 
     @Autowired
     private AreaRepository areaRepository;
+
+    @Autowired
+    private EnclosureRepository enclosureRepository;
 
     public Species newSpecies(Species input) throws Exception {
         if (speciesRepository.exists(input.getSpeciesName())) {
@@ -135,5 +141,33 @@ public class Mutation implements GraphQLMutationResolver {
         areaRepository.updateArea(area.getName(), input.getName(), input.getHeadKeeper().getName());
 
         return areaRepository.findOne(input.getName());
+    }
+
+    public Enclosure newEnclosure(String areaName){
+        EnclosureIdentity enclosureIdentity = new EnclosureIdentity();
+        enclosureIdentity.setAreaName(areaName);
+        enclosureIdentity.setEnclosureNumber(enclosureRepository.getNextEnclosureNumber(areaName));
+
+        Enclosure enclosure =  new Enclosure();
+        enclosure.setEnclosureIdentity(enclosureIdentity);
+
+        return enclosureRepository.save(enclosure);
+    }
+
+    public boolean removeEnclosure(String areaName, int enclosureNumber) throws Exception {
+        EnclosureIdentity enclosureIdentity = new EnclosureIdentity();
+        enclosureIdentity.setAreaName(areaName);
+        enclosureIdentity.setEnclosureNumber(enclosureNumber);
+
+        Enclosure enclosure = enclosureRepository.findOne(enclosureIdentity);
+        if (enclosure == null) {
+            throw new NotFoundException("The enclosure to be removed is not found.");
+        }
+        try {
+            enclosureRepository.delete(enclosure);
+        } catch (Exception e) {
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
+        return true;
     }
 }
