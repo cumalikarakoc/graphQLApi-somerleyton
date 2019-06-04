@@ -2,13 +2,18 @@ package nl.ica.ise7.GraphQLApisomerleyton.resolvers;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import javassist.NotFoundException;
+import nl.ica.ise7.GraphQLApisomerleyton.models.Keeper;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Species;
+import nl.ica.ise7.GraphQLApisomerleyton.repositories.KeeperRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class Mutation implements GraphQLMutationResolver {
     @Autowired
     private SpeciesRepository speciesRepository;
+
+    @Autowired
+    private KeeperRepository keeperRepository;
 
     public Species newSpecies(Species input) throws Exception {
         if (speciesRepository.exists(input.getSpeciesName())) {
@@ -52,5 +57,34 @@ public class Mutation implements GraphQLMutationResolver {
         species.setSpecies(input.getSpecies());
         species.setSubspecies(input.getSubspecies());
         return species;
+    }
+
+    public Keeper newKeeper(String name) throws Exception {
+        if (keeperRepository.exists(name)) {
+            throw new Exception("The keeper to be added already exists.");
+        }
+        Keeper keeper = new Keeper();
+        keeper.setName(name);
+        return keeperRepository.save(keeper);
+    }
+
+    public Boolean removeKeeper(String name) throws NotFoundException {
+        Keeper keeper = keeperRepository.findOne(name);
+        if (keeper == null) {
+            throw new NotFoundException("The keeper to be removed is not found.");
+        }
+        keeperRepository.delete(keeper);
+        return true;
+    }
+
+    public Keeper updateKeeper(String name, Keeper input) throws NotFoundException {
+        Keeper keeper = keeperRepository.findOne(name);
+        if (keeper == null) {
+            throw new NotFoundException("The keeper to be updated is not found.");
+        }
+
+        keeperRepository.updateKeeper(keeper.getName(), input.getName());
+        keeper.setName(input.getName());
+        return keeper;
     }
 }
