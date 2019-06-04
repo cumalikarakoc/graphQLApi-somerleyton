@@ -3,9 +3,11 @@ package nl.ica.ise7.GraphQLApisomerleyton.resolvers;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import javassist.NotFoundException;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Area;
+import nl.ica.ise7.GraphQLApisomerleyton.models.Enclosure;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Keeper;
 import nl.ica.ise7.GraphQLApisomerleyton.models.Species;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.AreaRepository;
+import nl.ica.ise7.GraphQLApisomerleyton.repositories.EnclosureRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.KeeperRepository;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.SpeciesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class Query implements GraphQLQueryResolver {
 
     @Autowired
     private AreaRepository areaRepository;
+
+    @Autowired
+    private EnclosureRepository enclosureRepository;
 
     public Iterable<Species> allSpecies() {
         return speciesRepository.findAll();
@@ -68,5 +73,13 @@ public class Query implements GraphQLQueryResolver {
             throw new NotFoundException("The keeper " + keeper.getName() + " is not an head keeper.");
         }
         return area;
+    }
+
+    public Iterable<Enclosure> allEnclosures(){
+        return enclosureRepository.findAll();
+    }
+
+    public Iterable<Enclosure> allEnclosuresByArea(String areaName){
+       return enclosureRepository.findAllByEnclosureIdentity_AreaName(areaName);
     }
 }

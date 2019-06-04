@@ -1,6 +1,7 @@
 type Area{
     name: ID!
     headKeeper: Keeper!
+    enclosures: [Enclosure]
 }
 
 input AreaInput{
