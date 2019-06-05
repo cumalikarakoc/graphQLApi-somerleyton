@@ -8,7 +8,7 @@ input FoodKindInput{
 
 extend type Query{
     allFoodKinds : [FoodKind]!
-    foodKindById(name : ID!): FoodKind!
+    foodKindByName(name : ID!): FoodKind!
 }
 
 extend type Mutation {

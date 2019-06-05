@@ -10,7 +10,7 @@ import javax.persistence.Table;
 public class FoodKind {
 
     @Id
-    @Column(name = "food_type_ft")
+    @Column(name = "food_type")
     private String name;
 
     public String getName() {

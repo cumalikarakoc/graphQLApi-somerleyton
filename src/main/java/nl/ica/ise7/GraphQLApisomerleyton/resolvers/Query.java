@@ -114,7 +114,7 @@ public class Query implements GraphQLQueryResolver {
         return foodKindRepository.findAll();
     }
 
-    public FoodKind foodKindById(String id) throws NotFoundException {
+    public FoodKind foodKindByName(String id) throws NotFoundException {
         FoodKind foodKind = foodKindRepository.findOne(id);
         if(foodKind == null){
             throw new NotFoundException("The foodkind " + id + " is not found.");
