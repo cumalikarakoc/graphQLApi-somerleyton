@@ -1,0 +1,15 @@
+type AnimalEnclosure{
+    animal: Animal!
+    enclosure: Enclosure!
+    since: String!
+    endDate: String
+}
+
+extend type Query{
+    enclosuresByAnimalId(animalId: String!): [AnimalEnclosure]!
+    animalsByEnclosure(areaName: String!, enclosureNumber: Int!): [AnimalEnclosure]!
+}
+
+extend type Mutation{
+    placeAnimalInEnclosure(animalId: String!, areaName: String!, enclosureNumber: Int!): AnimalEnclosure!
+}
