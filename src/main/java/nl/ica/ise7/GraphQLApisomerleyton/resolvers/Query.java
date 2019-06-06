@@ -138,8 +138,7 @@ public class Query implements GraphQLQueryResolver {
         if(supplier == null){
             throw new NotFoundException("No supplier found called "+ supplierName);
         }
-        Iterable<FoodKind> foodKinds = supplier.getFoodKinds();
-        return foodKinds;
+        return supplier.getFoodKinds();
     }
 
 }
