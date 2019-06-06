@@ -29,6 +29,9 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     private ExchangeRepository exchangeRepository;
 
+    @Autowired
+    private AnimalEnclosureRepository animalEnclosureRepository;
+
     public Iterable<Species> allSpecies() {
         return speciesRepository.findAll();
     }
@@ -110,11 +113,19 @@ public class Query implements GraphQLQueryResolver {
         return animal;
     }
 
-    public Iterable<Exchange> allExchanges(){
+    public Iterable<Exchange> allExchanges() {
         return exchangeRepository.findAll();
     }
 
-    public Iterable<Exchange> exchangesByAnimal(String animalId){
+    public Iterable<Exchange> exchangesByAnimal(String animalId) {
         return exchangeRepository.findExchangesByAnimalId(animalId);
+    }
+
+    public Iterable<AnimalEnclosure> enclosuresByAnimalId(String animalId) {
+        return animalEnclosureRepository.findEnclosuresByAnimalId(animalId);
+    }
+
+    public Iterable<AnimalEnclosure> animalsByEnclosure(String areaName, int enclosureNumber) {
+        return animalEnclosureRepository.findAnimalEnclosuresByAreaNameAndEnclosureNumber(areaName, enclosureNumber);
     }
 }

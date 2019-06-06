@@ -8,6 +8,7 @@ import nl.ica.ise7.GraphQLApisomerleyton.resolvers.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,22 +57,27 @@ public class GraphQlApiSomerleytonApplication {
     }
 
     @Bean
-    public EnclosureResolver enclosureResolver(){
+    public EnclosureResolver enclosureResolver() {
         return new EnclosureResolver();
     }
 
     @Bean
-    public AreaResolver areaResolver(){
+    public AreaResolver areaResolver() {
         return new AreaResolver();
     }
 
     @Bean
-    public AnimalResolver animalResolver(){
+    public AnimalResolver animalResolver() {
         return new AnimalResolver();
     }
 
     @Bean
-    public ExchangeResolver exchangeResolver(){
-        return  new ExchangeResolver();
+    public ExchangeResolver exchangeResolver() {
+        return new ExchangeResolver();
+    }
+
+    @Bean
+    public AnimalEnclosureResolver animalEnclosureResolver() {
+        return new AnimalEnclosureResolver();
     }
 }
