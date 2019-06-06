@@ -3,9 +3,11 @@ package nl.ica.ise7.GraphQLApisomerleyton.resolvers;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import javassist.NotFoundException;
 import nl.ica.ise7.GraphQLApisomerleyton.models.*;
+import nl.ica.ise7.GraphQLApisomerleyton.models.compositeKeys.AnimalEnclosureIdentity;
 import nl.ica.ise7.GraphQLApisomerleyton.models.compositeKeys.EnclosureIdentity;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Date;
 
 public class Mutation implements GraphQLMutationResolver {
     @Autowired
@@ -28,6 +30,9 @@ public class Mutation implements GraphQLMutationResolver {
 
     @Autowired
     private FoodKindRepository foodKindRepository;
+
+    @Autowired
+    private AnimalEnclosureRepository animalEnclosureRepository;
 
     public Species newSpecies(Species input) throws Exception {
         if (speciesRepository.exists(input.getSpeciesName())) {
@@ -252,6 +257,32 @@ public class Mutation implements GraphQLMutationResolver {
         animal.setGender(input.getGender());
         animal.setSpeciesName(input.getSpeciesName());
         return animal;
+    }
+
+    public AnimalEnclosure placeAnimalInEnclosure(String animalId, String areaName, int enclosureNumber) throws Exception {
+        Animal animal = animalRepository.findOne(animalId);
+        if (animal == null) {
+            throw new Exception("The animal " + animalId + " is not found.");
+        }
+
+        EnclosureIdentity enclosureIdentity = new EnclosureIdentity();
+        enclosureIdentity.setAreaName(areaName);
+        enclosureIdentity.setEnclosureNumber(enclosureNumber);
+        Enclosure enclosure = enclosureRepository.findOne(enclosureIdentity);
+
+        if(enclosure == null){
+            throw new Exception("The enclosure " + areaName + "-" + enclosureNumber + " is not found.");
+        }
+
+        AnimalEnclosure animalEnclosure = new AnimalEnclosure();
+        animalEnclosure.setIdentity(new AnimalEnclosureIdentity(animalId, new Date()));
+        animalEnclosure.setAreaName(areaName);
+        animalEnclosure.setEnclosureNumber(enclosureNumber);
+        try{
+            return animalEnclosureRepository.save(animalEnclosure);
+        }catch (Exception e){
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
     }
 
     public FoodKind newFoodKind(FoodKind input) throws Exception {
