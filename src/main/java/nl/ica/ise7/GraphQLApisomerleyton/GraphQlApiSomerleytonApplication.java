@@ -69,4 +69,9 @@ public class GraphQlApiSomerleytonApplication {
     public AnimalResolver animalResolver(){
         return new AnimalResolver();
     }
+
+    @Bean
+    public AnimalEnclosureResolver animalEnclosureResolver(){
+        return new AnimalEnclosureResolver();
+    }
 }
