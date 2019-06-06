@@ -4,6 +4,7 @@ import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import javassist.NotFoundException;
 import nl.ica.ise7.GraphQLApisomerleyton.models.*;
 import nl.ica.ise7.GraphQLApisomerleyton.models.compositeKeys.EnclosureIdentity;
+import nl.ica.ise7.GraphQLApisomerleyton.models.compositeKeys.ExchangeIdentity;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,6 +26,9 @@ public class Mutation implements GraphQLMutationResolver {
 
     @Autowired
     private AnimalRepository animalRepository;
+
+    @Autowired
+    private ExchangeRepository exchangeRepository;
 
     public Species newSpecies(Species input) throws Exception {
         if (speciesRepository.exists(input.getSpeciesName())) {
@@ -249,5 +253,45 @@ public class Mutation implements GraphQLMutationResolver {
         animal.setGender(input.getGender());
         animal.setSpeciesName(input.getSpeciesName());
         return animal;
+    }
+
+    public Exchange newExchange(Exchange input) throws Exception {
+        input.setIsNew(true);
+        try {
+            return exchangeRepository.save(input);
+        }catch (Exception e){
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
+    }
+
+    public Exchange updateExchange(ExchangeIdentity identity, Exchange input) throws Exception {
+        if(exchangeRepository.findOne(identity) == null){
+            throw new NotFoundException("Exchange to be updated is not found.");
+        }
+
+        try {
+            exchangeRepository.updateExchangeIdentity(
+                    identity.getAnimalId(), identity.getExchangeDate(),
+                    input.getIdentity().getAnimalId(), input.getIdentity().getExchangeDate()
+            );
+            input.setIsNew(false);
+           return exchangeRepository.save(input);
+        }catch (Exception e){
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+
+        }
+    }
+
+    public boolean removeExchange(ExchangeIdentity identity) throws Exception {
+        if(exchangeRepository.findOne(identity) == null){
+            throw new NotFoundException("Exchange to be removed is not found.");
+        }
+
+        try{
+            exchangeRepository.delete(identity);
+            return true;
+        }catch (Exception e){
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
     }
 }
