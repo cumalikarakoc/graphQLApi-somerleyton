@@ -29,6 +29,9 @@ public class Mutation implements GraphQLMutationResolver {
     private AnimalRepository animalRepository;
 
     @Autowired
+    private FoodKindRepository foodKindRepository;
+
+    @Autowired
     private AnimalEnclosureRepository animalEnclosureRepository;
 
     public Species newSpecies(Species input) throws Exception {
@@ -281,4 +284,34 @@ public class Mutation implements GraphQLMutationResolver {
             throw new Exception(e.getCause().getCause().getLocalizedMessage());
         }
     }
+
+    public FoodKind newFoodKind(FoodKind input) throws Exception {
+        if(foodKindRepository.exists(input.getName())){
+            throw new Exception("The foodType to be added does already exists");
+        }
+        FoodKind foodKind = new FoodKind();
+        foodKind.setName(input.getName());
+        foodKindRepository.save(foodKind);
+        return foodKind;
+    }
+
+    public FoodKind updateFoodKind(String name, String input) throws NotFoundException {
+        FoodKind foodKind = foodKindRepository.findOne(name);
+        if(foodKind == null){
+            throw new NotFoundException("The food kind to be updated is not found.");
+        }
+        foodKindRepository.updateFoodKind(name, input);
+        foodKind.setName(input);
+        return foodKind;
+    }
+
+    public Boolean removeFoodKind(String name) throws NotFoundException {
+        FoodKind foodKind = foodKindRepository.findOne(name);
+        if(foodKind == null){
+            throw new NotFoundException("The foodkind to be deleted does not exist.");
+        }
+        foodKindRepository.delete(foodKind);
+        return true;
+    }
+
 }

@@ -1,8 +1,7 @@
 package nl.ica.ise7.GraphQLApisomerleyton.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Supplier {
@@ -17,6 +16,8 @@ public class Supplier {
     @Column(name = "address")
     private String address;
 
+    @ManyToMany(mappedBy = "suppliers", fetch = FetchType.EAGER)
+    private Set<FoodKind> foodKinds;
 
     public String getName() {
         return name;
@@ -40,5 +41,13 @@ public class Supplier {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Set<FoodKind> getFoodKinds() {
+        return foodKinds;
+    }
+
+    public void setFoodKinds(Set<FoodKind> foodKinds) {
+        this.foodKinds = foodKinds;
     }
 }

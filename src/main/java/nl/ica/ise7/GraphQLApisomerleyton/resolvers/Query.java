@@ -27,6 +27,9 @@ public class Query implements GraphQLQueryResolver {
     private AnimalRepository animalRepository;
 
     @Autowired
+    private FoodKindRepository foodKindRepository;
+
+    @Autowired
     private AnimalEnclosureRepository animalEnclosureRepository;
 
     public Iterable<Species> allSpecies() {
@@ -117,4 +120,25 @@ public class Query implements GraphQLQueryResolver {
     public Iterable<AnimalEnclosure> animalsByEnclosure(String areaName, int enclosureNumber) {
         return animalEnclosureRepository.findAnimalEnclosuresByAreaNameAndEnclosureNumber(areaName, enclosureNumber);
     }
+
+    public Iterable<FoodKind> allFoodKinds(){
+        return foodKindRepository.findAll();
+    }
+
+    public FoodKind foodKindByName(String id) throws NotFoundException {
+        FoodKind foodKind = foodKindRepository.findOne(id);
+        if(foodKind == null){
+            throw new NotFoundException("The foodkind " + id + " is not found.");
+        }
+        return foodKind;
+    }
+
+    public Iterable<FoodKind> foodKindBySupplier(String supplierName) throws NotFoundException {
+        Supplier supplier = supplierRepository.findOne(supplierName);
+        if(supplier == null){
+            throw new NotFoundException("No supplier found called "+ supplierName);
+        }
+        return supplier.getFoodKinds();
+    }
+
 }
