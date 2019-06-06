@@ -5,8 +5,10 @@ import nl.ica.ise7.GraphQLApisomerleyton.models.compositeKeys.EnclosureIdentity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
+@Transactional
 public interface EnclosureRepository extends CrudRepository<Enclosure, EnclosureIdentity> {
     List<Enclosure> findAllByEnclosureIdentity_AreaName(String areaName);
 
