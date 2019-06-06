@@ -9,6 +9,7 @@ input FoodKindInput{
 extend type Query{
     allFoodKinds : [FoodKind]!
     foodKindByName(name : ID!): FoodKind!
+    foodKindBySupplier(supplierName : String!): [FoodKind]!
 }
 
 extend type Mutation {
