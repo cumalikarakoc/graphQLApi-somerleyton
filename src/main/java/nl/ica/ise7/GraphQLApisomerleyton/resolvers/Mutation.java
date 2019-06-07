@@ -5,6 +5,7 @@ import javassist.NotFoundException;
 import nl.ica.ise7.GraphQLApisomerleyton.models.*;
 import nl.ica.ise7.GraphQLApisomerleyton.models.compositeKeys.AnimalEnclosureIdentity;
 import nl.ica.ise7.GraphQLApisomerleyton.models.compositeKeys.EnclosureIdentity;
+import nl.ica.ise7.GraphQLApisomerleyton.models.compositeKeys.ExchangeIdentity;
 import nl.ica.ise7.GraphQLApisomerleyton.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
@@ -27,6 +28,9 @@ public class Mutation implements GraphQLMutationResolver {
 
     @Autowired
     private AnimalRepository animalRepository;
+
+    @Autowired
+    private ExchangeRepository exchangeRepository;
 
     @Autowired
     private FoodKindRepository foodKindRepository;
@@ -259,6 +263,46 @@ public class Mutation implements GraphQLMutationResolver {
         return animal;
     }
 
+    public Exchange newExchange(Exchange input) throws Exception {
+        input.setIsNew(true);
+        try {
+            return exchangeRepository.save(input);
+        } catch (Exception e) {
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
+    }
+
+    public Exchange updateExchange(ExchangeIdentity identity, Exchange input) throws Exception {
+        if (exchangeRepository.findOne(identity) == null) {
+            throw new NotFoundException("Exchange to be updated is not found.");
+        }
+
+        try {
+            exchangeRepository.updateExchangeIdentity(
+                    identity.getAnimalId(), identity.getExchangeDate(),
+                    input.getIdentity().getAnimalId(), input.getIdentity().getExchangeDate()
+            );
+            input.setIsNew(false);
+            return exchangeRepository.save(input);
+        } catch (Exception e) {
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+
+        }
+    }
+
+    public boolean removeExchange(ExchangeIdentity identity) throws Exception {
+        if (exchangeRepository.findOne(identity) == null) {
+            throw new NotFoundException("Exchange to be removed is not found.");
+        }
+
+        try {
+            exchangeRepository.delete(identity);
+            return true;
+        } catch (Exception e) {
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
+    }
+
     public AnimalEnclosure placeAnimalInEnclosure(String animalId, String areaName, int enclosureNumber) throws Exception {
         Animal animal = animalRepository.findOne(animalId);
         if (animal == null) {
@@ -270,7 +314,7 @@ public class Mutation implements GraphQLMutationResolver {
         enclosureIdentity.setEnclosureNumber(enclosureNumber);
         Enclosure enclosure = enclosureRepository.findOne(enclosureIdentity);
 
-        if(enclosure == null){
+        if (enclosure == null) {
             throw new Exception("The enclosure " + areaName + "-" + enclosureNumber + " is not found.");
         }
 
@@ -278,9 +322,9 @@ public class Mutation implements GraphQLMutationResolver {
         animalEnclosure.setIdentity(new AnimalEnclosureIdentity(animalId, new Date()));
         animalEnclosure.setAreaName(areaName);
         animalEnclosure.setEnclosureNumber(enclosureNumber);
-        try{
+        try {
             return animalEnclosureRepository.save(animalEnclosure);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception(e.getCause().getCause().getLocalizedMessage());
         }
     }
