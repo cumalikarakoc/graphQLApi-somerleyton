@@ -152,4 +152,12 @@ public class Query implements GraphQLQueryResolver {
         return supplier.getFoodKinds();
     }
 
+    public Iterable<Supplier> suppliersByFoodkind(String foodKindName) throws NotFoundException {
+        FoodKind foodKind = foodKindRepository.findOne(foodKindName);
+        if(foodKind == null){
+            throw new NotFoundException("No foodkind found called "+ foodKindName);
+        }
+        return foodKind.getSuppliers();
+    }
+
 }

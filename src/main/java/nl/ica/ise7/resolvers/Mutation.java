@@ -7,6 +7,7 @@ import nl.ica.ise7.models.compositeKeys.*;
 import nl.ica.ise7.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
+import java.util.Set;
 
 public class Mutation implements GraphQLMutationResolver {
     @Autowired
@@ -327,19 +328,23 @@ public class Mutation implements GraphQLMutationResolver {
         }
     }
 
-    public FoodKind newFoodKind(FoodKind input) throws Exception {
-        if(foodKindRepository.exists(input.getName())){
+    public Iterable<FoodKind> newFoodKind(FoodKind input) throws Exception {
+        if (foodKindRepository.exists(input.getName())) {
             throw new Exception("The foodType to be added does already exists");
         }
         FoodKind foodKind = new FoodKind();
         foodKind.setName(input.getName());
-        foodKindRepository.save(foodKind);
-        return foodKind;
+        try {
+            foodKindRepository.save(foodKind);
+        } catch (Exception e) {
+            throw new Exception(e.getCause().getCause().getLocalizedMessage());
+        }
+        return foodKindRepository.findAll();
     }
 
     public FoodKind updateFoodKind(String name, String input) throws NotFoundException {
         FoodKind foodKind = foodKindRepository.findOne(name);
-        if(foodKind == null){
+        if (foodKind == null) {
             throw new NotFoundException("The food kind to be updated is not found.");
         }
         foodKindRepository.updateFoodKind(name, input);
@@ -349,11 +354,33 @@ public class Mutation implements GraphQLMutationResolver {
 
     public Boolean removeFoodKind(String name) throws NotFoundException {
         FoodKind foodKind = foodKindRepository.findOne(name);
-        if(foodKind == null){
+        if (foodKind == null) {
             throw new NotFoundException("The foodkind to be deleted does not exist.");
         }
         foodKindRepository.delete(foodKind);
         return true;
     }
+
+    public Supplier addFoodKindToSupplier(String foodType, String supplierName) throws Exception {
+        FoodKind foodKind = foodKindRepository.findOne(foodType);
+        if (foodKind == null) {
+            throw new NotFoundException("The foodkind to be added to an supplier does not exist.");
+        }
+        Supplier supplier = supplierRepository.findOne(supplierName);
+        if (supplier == null) {
+            throw new NotFoundException("The suppplier does not exists");
+        }
+        Set<FoodKind> foodKinds = supplier.getFoodKinds();
+        if (foodKinds.contains(foodKind)) {
+            throw new Exception("This supplier already supplies this foodkind");
+        }
+        foodKinds.add(foodKind);
+        supplier.setFoodKinds(foodKinds);
+        foodKind.getSuppliers().add(supplier);
+        foodKindRepository.save(foodKind);
+        supplierRepository.save(supplier);
+        return supplier;
+    }
+
 
 }
