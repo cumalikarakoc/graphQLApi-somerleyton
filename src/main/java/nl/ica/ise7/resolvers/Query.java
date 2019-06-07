@@ -35,6 +35,9 @@ public class Query implements GraphQLQueryResolver {
     @Autowired
     private AnimalEnclosureRepository animalEnclosureRepository;
 
+    @Autowired
+    private FoodStockRepository foodStockRepository;
+
     public Iterable<Species> allSpecies() {
         return speciesRepository.findAll();
     }
@@ -158,6 +161,18 @@ public class Query implements GraphQLQueryResolver {
             throw new NotFoundException("No foodkind found called "+ foodKindName);
         }
         return foodKind.getSuppliers();
+    }
+
+    public Iterable<FoodStock> allFoodStocks(){
+        return foodStockRepository.findAll();
+    }
+
+    public Iterable<FoodStock> foodStocksByArea(String areaName) throws NotFoundException {
+        return foodStockRepository.getFoodStockByArea(areaName);
+    }
+
+    public Iterable<Area> areaByFoodStock(String foodKindName){
+        return areaRepository.getAreaByFoodStock(foodKindName);
     }
 
 }
