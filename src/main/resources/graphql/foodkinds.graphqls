@@ -13,7 +13,8 @@ extend type Query{
 }
 
 extend type Mutation {
-    newFoodKind(foodKind : FoodKindInput!): FoodKind!
+    newFoodKind(foodKind : FoodKindInput!): [FoodKind]!
     updateFoodKind(name : ID!, input : ID!) : FoodKind!
     removeFoodKind(name : ID!):Boolean!
+    addFoodKindToSupplier(foodKindName : ID!, supplierName : String): Supplier!
 }
