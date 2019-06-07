@@ -27,6 +27,9 @@ public class Query implements GraphQLQueryResolver {
     private AnimalRepository animalRepository;
 
     @Autowired
+    private ExchangeRepository exchangeRepository;
+
+    @Autowired
     private FoodKindRepository foodKindRepository;
 
     @Autowired
@@ -111,6 +114,14 @@ public class Query implements GraphQLQueryResolver {
             throw new NotFoundException("The animal " + id + " is not found.");
         }
         return animal;
+    }
+
+    public Iterable<Exchange> allExchanges() {
+        return exchangeRepository.findAll();
+    }
+
+    public Iterable<Exchange> exchangesByAnimal(String animalId) {
+        return exchangeRepository.findExchangesByAnimalId(animalId);
     }
 
     public Iterable<AnimalEnclosure> enclosuresByAnimalId(String animalId) {
