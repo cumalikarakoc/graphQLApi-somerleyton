@@ -1,0 +1,32 @@
+type Exchange{
+    animal: Animal!
+    exchangeDate: String!
+    returnDate: String
+    comment: String
+    loanType: String!
+    place: String!
+}
+
+input ExchangeIdentity{
+    animalId: String!
+    exchangeDate: String!
+}
+
+input ExchangeInput{
+    identity: ExchangeIdentity!
+    returnDate: String
+    comment: String
+    loanType: String!
+    place: String!
+}
+
+extend type Query{
+    allExchanges: [Exchange]!
+    exchangesByAnimal(animalId: String!): [Exchange]!
+}
+
+extend type Mutation{
+    newExchange(exchange: ExchangeInput!): Exchange!
+    updateExchange(exchangeId: ExchangeIdentity!, exchange: ExchangeInput): Exchange!
+    removeExchange(exchangeId: ExchangeIdentity!): Boolean!
+}
