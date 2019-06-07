@@ -16,5 +16,5 @@ These instructions will get you a copy of the project up and running on your loc
     - navigate to <http://localhost:8080/graphql/schema.json> for the description of GraphQL schema.
 
 ### Deployment
-- Run `mvn clean install` to install dependencies and create required target files to be able to run the application. It will also create an executable .jar file, named as 'somerleyton-api.jar' which can be found in `graphQLApi-somerleyton/target` folder. You can run this .jar file in production.
+- Run `mvn clean install` to install the dependencies and create the required target files to be able to run the application. It will also create an executable .jar file named as `somerleyton-api.jar` which can be found in `graphQLApi-somerleyton/target` folder. You can run this .jar file in production.
 - For more information on deployment, see the deployment diagram in the Technical Design for this project.
