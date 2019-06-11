@@ -1,0 +1,22 @@
+type Area{
+    name: ID!
+    headKeeper: Keeper!
+    enclosures: [Enclosure]
+}
+
+input AreaInput{
+    name: ID!
+    headKeeper: KeeperInput!
+}
+
+extend type Query{
+    allAreas: [Area]!
+    areaByName(name: ID!): Area!
+    areaByHeadKeeper(headKeeper: String!): Area!
+}
+
+extend type Mutation{
+     newArea(name: ID!, headKeeper: String!): Area!
+     removeArea(name: ID!): Boolean!
+     updateArea(name: ID!, input: AreaInput!): Area!
+}

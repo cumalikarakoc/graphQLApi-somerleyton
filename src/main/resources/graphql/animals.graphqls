@@ -1,0 +1,28 @@
+type Animal{
+    id: ID!
+    name: String!
+    gender: String!
+    birthPlace: String!
+    birthDate: String!
+    species: Species!
+}
+
+input AnimalInput{
+    id: ID!
+    name: String!
+    gender: String!
+    birthPlace: String!
+    birthDate: String!
+    speciesName: String!
+}
+
+extend type Query{
+    allAnimals: [Animal]!
+    animalById(id: ID!): Animal!
+}
+
+extend type Mutation{
+    newAnimal(animal: AnimalInput!): Animal!
+    removeAnimal(id: ID!): Boolean!
+    updateAnimal(id: ID!, animal: AnimalInput!): Animal!
+}

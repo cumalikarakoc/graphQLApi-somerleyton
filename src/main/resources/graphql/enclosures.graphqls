@@ -1,0 +1,14 @@
+type Enclosure{
+    area: Area!
+    enclosureNumber: Int!
+}
+
+extend type Query{
+    allEnclosures: [Enclosure]!
+    allEnclosuresByArea(areaName: String!): [Enclosure]!
+}
+
+extend type Mutation{
+    newEnclosure(areaName: String!): Enclosure!
+    removeEnclosure(areaName: String!, enclosureNumber: Int!): Boolean!
+}

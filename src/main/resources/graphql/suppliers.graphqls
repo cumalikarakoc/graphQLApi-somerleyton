@@ -1,0 +1,24 @@
+type Supplier{
+name : ID!
+phone: String
+address : String
+}
+
+input SupplierInput{
+name : ID!
+phone: String!
+address : String!
+}
+
+extend type Query{
+allSuppliers : [Supplier]!
+supplierByName(name : ID!): Supplier!
+suppliersByFoodkind(foodKindName : String!):[Supplier]!
+}
+
+extend type Mutation {
+    newSupplier(supplier : SupplierInput!): Supplier!
+    updateSupplier(name : ID!, supplier : SupplierInput!) : Supplier!
+    removeSupplier(name : ID!):Boolean!
+
+}
