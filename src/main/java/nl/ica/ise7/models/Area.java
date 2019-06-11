@@ -1,6 +1,7 @@
 package nl.ica.ise7.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Area {
@@ -28,4 +29,7 @@ public class Area {
     public void setHeadKeeper(Keeper headKeeper) {
         this.headKeeper = headKeeper;
     }
+
+    @OneToMany(targetEntity = FoodStock.class, mappedBy = "areaName")
+    private List<FoodStock> foodStocks;
 }

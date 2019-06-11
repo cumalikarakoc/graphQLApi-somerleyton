@@ -1,9 +1,10 @@
 package nl.ica.ise7.models;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
-@Entity
+@Entity(name = "FoodKind")
 @Table(name = "food_kind")
 public class FoodKind {
 
@@ -18,6 +19,9 @@ public class FoodKind {
             inverseJoinColumns = @JoinColumn(name = "supplier_name")
     )
     private Set<Supplier> suppliers;
+
+    @OneToMany(targetEntity = FoodStock.class, mappedBy = "foodType", fetch = FetchType.EAGER)
+    private List<FoodStock> foodStocks;
 
     public String getName() {
         return name;

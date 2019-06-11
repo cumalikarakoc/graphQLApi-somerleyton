@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.transaction.Transactional;
+import java.util.Set;
 
 @Transactional
 public interface AreaRepository extends CrudRepository<Area, String> {
@@ -15,4 +16,7 @@ public interface AreaRepository extends CrudRepository<Area, String> {
     @Modifying
     @Query(value = "UPDATE area SET area_name = ?2, headkeeper = ?3 WHERE area_name = ?1", nativeQuery = true)
     void updateArea(String areaToUpdate, String areaName, String keeperName);
+
+    @Query(value = "FROM stock WHERE food_type = ?1", nativeQuery = true)
+    Set<Area> getAreaByFoodStock(String foodKindName);
 }

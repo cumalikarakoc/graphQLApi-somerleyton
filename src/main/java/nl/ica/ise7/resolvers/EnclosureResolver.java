@@ -10,11 +10,11 @@ public class EnclosureResolver implements GraphQLResolver<Enclosure> {
     @Autowired
     private AreaRepository areaRepository;
 
-    public Area getArea(Enclosure enclosure){
+    public Area getArea(Enclosure enclosure) {
         return areaRepository.findOne(enclosure.getEnclosureIdentity().getAreaName());
     }
 
-    public int getEnclosureNumber(Enclosure enclosure){
+    public int getEnclosureNumber(Enclosure enclosure) {
         return enclosure.getEnclosureIdentity().getEnclosureNumber();
     }
 }

@@ -3,7 +3,10 @@ package nl.ica.ise7.models;
 import nl.ica.ise7.models.compositeKeys.AnimalEnclosureIdentity;
 import org.springframework.data.domain.Persistable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 

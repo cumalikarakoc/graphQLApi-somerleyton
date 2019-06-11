@@ -1,0 +1,18 @@
+type FoodStock{
+    foodType : ID!
+    areaName : ID!
+    Amount : Float
+}
+
+input FoodStockInput{
+    FoodType : ID!
+    areaName : ID!
+    Amount : Float
+}
+
+extend type Query{
+    allFoodStocks: [FoodStock]!
+    foodStocksByArea(AreaName : String) : [FoodStock]!
+    areaByFoodStock(input : FoodStockInput!) : [Area]!
+}
+

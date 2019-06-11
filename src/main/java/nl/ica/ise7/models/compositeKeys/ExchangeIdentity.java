@@ -14,7 +14,8 @@ public class ExchangeIdentity implements Serializable {
     @Column(name = "exchange_date")
     private Date exchangeDate;
 
-    public ExchangeIdentity() {}
+    public ExchangeIdentity() {
+    }
 
     public ExchangeIdentity(String animalId, Date exchangeDate) {
         this.animalId = animalId;

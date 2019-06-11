@@ -12,7 +12,7 @@ public class AreaResolver implements GraphQLResolver<Area> {
     @Autowired
     private EnclosureRepository enclosureRepository;
 
-    public List<Enclosure> getEnclosures(Area area){
+    public List<Enclosure> getEnclosures(Area area) {
         return enclosureRepository.findAllByEnclosureIdentity_AreaName(area.getName());
     }
 }
