@@ -10,7 +10,7 @@ public class AnimalResolver implements GraphQLResolver<Animal> {
     @Autowired
     private SpeciesRepository speciesRepository;
 
-    public Species getSpecies(Animal animal){
+    public Species getSpecies(Animal animal) {
         return speciesRepository.findBySpeciesName(animal.getSpeciesName());
     }
 }

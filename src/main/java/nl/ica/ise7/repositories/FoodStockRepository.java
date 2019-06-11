@@ -1,6 +1,5 @@
 package nl.ica.ise7.repositories;
 
-import nl.ica.ise7.models.Area;
 import nl.ica.ise7.models.FoodStock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

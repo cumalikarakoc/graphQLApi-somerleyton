@@ -10,7 +10,7 @@ public class ExchangeResolver implements GraphQLResolver<Exchange> {
     @Autowired
     private AnimalRepository animalRepository;
 
-    public Animal getAnimal(Exchange exchange){
+    public Animal getAnimal(Exchange exchange) {
         return animalRepository.findOne(exchange.getIdentity().getAnimalId());
     }
 }

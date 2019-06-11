@@ -3,9 +3,12 @@ package nl.ica.ise7.resolvers;
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import javassist.NotFoundException;
 import nl.ica.ise7.models.*;
-import nl.ica.ise7.models.compositeKeys.*;
+import nl.ica.ise7.models.compositeKeys.AnimalEnclosureIdentity;
+import nl.ica.ise7.models.compositeKeys.EnclosureIdentity;
+import nl.ica.ise7.models.compositeKeys.ExchangeIdentity;
 import nl.ica.ise7.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.Date;
 import java.util.Set;
 

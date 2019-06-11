@@ -2,6 +2,7 @@ package nl.ica.ise7.models;
 
 import nl.ica.ise7.models.compositeKeys.ExchangeIdentity;
 import org.springframework.data.domain.Persistable;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -70,11 +71,11 @@ public class Exchange implements Persistable {
         this.place = place;
     }
 
-    public Date getExchangeDate(){
+    public Date getExchangeDate() {
         return identity.getExchangeDate();
     }
 
-    public void setIsNew(Boolean isNew){
+    public void setIsNew(Boolean isNew) {
         this.isNew = isNew;
     }
 

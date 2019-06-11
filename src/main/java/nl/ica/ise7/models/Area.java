@@ -1,7 +1,5 @@
 package nl.ica.ise7.models;
 
-import org.hibernate.annotations.NaturalIdCache;
-
 import javax.persistence.*;
 import java.util.List;
 

@@ -13,7 +13,8 @@ public class AnimalEnclosureIdentity implements Serializable {
     @NotNull
     private Date since;
 
-    public AnimalEnclosureIdentity(){}
+    public AnimalEnclosureIdentity() {
+    }
 
     public AnimalEnclosureIdentity(String animalId, Date since) {
         this.animalId = animalId;

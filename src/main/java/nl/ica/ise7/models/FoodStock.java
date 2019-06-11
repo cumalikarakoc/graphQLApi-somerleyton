@@ -1,7 +1,6 @@
 package nl.ica.ise7.models;
 
 
-
 import nl.ica.ise7.models.compositeKeys.FoodStockIdentity;
 
 import javax.persistence.*;

@@ -135,13 +135,13 @@ public class Query implements GraphQLQueryResolver {
         return animalEnclosureRepository.findAnimalEnclosuresByAreaNameAndEnclosureNumber(areaName, enclosureNumber);
     }
 
-    public Iterable<FoodKind> allFoodKinds(){
+    public Iterable<FoodKind> allFoodKinds() {
         return foodKindRepository.findAll();
     }
 
     public FoodKind foodKindByName(String id) throws NotFoundException {
         FoodKind foodKind = foodKindRepository.findOne(id);
-        if(foodKind == null){
+        if (foodKind == null) {
             throw new NotFoundException("The foodkind " + id + " is not found.");
         }
         return foodKind;
@@ -149,21 +149,21 @@ public class Query implements GraphQLQueryResolver {
 
     public Iterable<FoodKind> foodKindBySupplier(String supplierName) throws NotFoundException {
         Supplier supplier = supplierRepository.findOne(supplierName);
-        if(supplier == null){
-            throw new NotFoundException("No supplier found called "+ supplierName);
+        if (supplier == null) {
+            throw new NotFoundException("No supplier found called " + supplierName);
         }
         return supplier.getFoodKinds();
     }
 
     public Iterable<Supplier> suppliersByFoodkind(String foodKindName) throws NotFoundException {
         FoodKind foodKind = foodKindRepository.findOne(foodKindName);
-        if(foodKind == null){
-            throw new NotFoundException("No foodkind found called "+ foodKindName);
+        if (foodKind == null) {
+            throw new NotFoundException("No foodkind found called " + foodKindName);
         }
         return foodKind.getSuppliers();
     }
 
-    public Iterable<FoodStock> allFoodStocks(){
+    public Iterable<FoodStock> allFoodStocks() {
         return foodStockRepository.findAll();
     }
 
@@ -171,7 +171,7 @@ public class Query implements GraphQLQueryResolver {
         return foodStockRepository.getFoodStockByArea(areaName);
     }
 
-    public Iterable<Area> areaByFoodStock(String foodKindName){
+    public Iterable<Area> areaByFoodStock(String foodKindName) {
         return areaRepository.getAreaByFoodStock(foodKindName);
     }
 

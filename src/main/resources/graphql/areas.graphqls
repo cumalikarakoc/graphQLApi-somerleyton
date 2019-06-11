@@ -16,7 +16,7 @@ extend type Query{
 }
 
 extend type Mutation{
-     newArea(name: ID!, headKeeper: String!): Area!
-     removeArea(name: ID!): Boolean!
-     updateArea(name: ID!, input: AreaInput!): Area!
+    newArea(name: ID!, headKeeper: String!): Area!
+    removeArea(name: ID!): Boolean!
+    updateArea(name: ID!, input: AreaInput!): Area!
 }
