@@ -12,7 +12,7 @@ input FoodStockInput{
 
 extend type Query{
     allFoodStocks: [FoodStock]!
-    foodStocksByArea(areaName : String) : [FoodStock]!
-    areaByFoodStock(input : FoodStockInput) : [Area]!
+    foodStocksByArea(AreaName : String) : [FoodStock]!
+    areaByFoodStock(input : FoodStockInput!) : [Area]!
 }
 
